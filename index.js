@@ -4,7 +4,7 @@ const port = process.env.PORT || 5000;
 const app = express();
 const cors = require("cors");
 // mongodb te connect korar jonno ******
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 
 // middleware
 app.use(cors());
@@ -28,7 +28,7 @@ async function run() {
     const db = client.db("basicCrudDB");
     const productsCollection = db.collection("products");
 
-    app.post("/products", async (req, res) => {
+    app.post("/product", async (req, res) => {
       const newProduct = req.body;
       console.log(newProduct);
       // res.send("product paici😎")
@@ -40,6 +40,17 @@ async function run() {
      const cursor =await productsCollection.find().toArray()
      res.send(cursor) 
     })
+
+    
+    app.get("/product/:id",async(req,res)=>{
+       const id = req.params.id
+       console.log(id);
+       const query = {_id : new ObjectId(id)}
+       const result = await productsCollection.findOne(query)
+       res.send(result)
+    })
+
+
   } finally {
   }
 }
@@ -53,3 +64,40 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Basic CRUD app listening on port ${port}`);
 });
+
+
+// API Endpoints
+
+// 1. GET :  / -----------> for Server Test
+// 2. POST : /product ---------------> for create a product
+// 3. GET :  /products ----------------------> for get all products
+// 4. GET Single Product :  /product/:id --------------> for get a single product
+// 5. PUT :  /product/:id ----------------> for update a product
+// 6. PATCH :  /product/:id ----------------> for update a product
+// 6. DELETE :  /product/:id ------------> for delete a product
+
+// ----------------------------------------------------
+
+//  7. GET : /products/:email     ---------------> for get all products created by a specific user
+//  8. POST : /order ---------------> for create a order
+//  9. GET :  /my-order/:email   ----------------------> for get all orders of a specific user
+// 10. GET : /order-requests/:email ---------------> for get all order requests of a specific user
+// 11. PATCH : /order/:id ----------------> for update a order status
+
+
+
+// -----------------------------------------------
+//  Pagination,Sort,Filter,Search
+
+
+
+// ========================================================================
+
+
+// JWT token Generate from Terminal
+// ----->  node -e "console.log(require('crypto').randomBytes(64).toString('hex'))"
+
+// ==========================================================================
+
+
+
